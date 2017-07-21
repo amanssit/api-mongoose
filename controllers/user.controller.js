@@ -53,7 +53,6 @@ exports.show = function (req, res) {
 exports.login = function (req, res) {
     var userData = req.body;
     User.findOne({'username': userData.username,'is_deleted':false}, function (err, user) {
-        console.log(user)
         if (err) {
             return res.json(err);
         }
