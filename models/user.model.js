@@ -20,7 +20,12 @@ var UserSchema = new Schema({
     created_date: {
         type: Date,
         Default: Date.now
+    },
+    is_deleted:{
+        type:Boolean,
+        default:false
     }
+
 
 });
 

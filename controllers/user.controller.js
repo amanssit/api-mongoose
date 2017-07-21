@@ -3,15 +3,37 @@ var mongoose = require('mongoose');
 var crypto = require('crypto');
 var User = mongoose.model('User');
 
+var Profile=require('../models/profile.model');
+
 exports.create = function (req, res) {
-    var user = req.body;
+    var user={};
+    var profile={};
+
+    user.username = req.body.username;
+    user.password = req.body.password;
+
+    profile.name=req.body.name;
+    profile.city=req.body.city;
+
     var new_user = new User(user);
     new_user.save(function (err, result) {
         if (err) {
             res.send(err);
         }
         else {
-            res.json({status: 200, msg: 'User created'});
+            profile.user_id=result._id;
+            var new_profile=new Profile(profile);
+            new_profile.save(function (err,profile) {
+                if(err)
+                {
+                    res.send(err);
+                }
+                else
+                {
+                    res.json({status: 200, msg: 'User created',data:profile});
+                }
+            })
+
         }
     });
 
@@ -22,7 +44,7 @@ exports.show = function (req, res) {
             res.json(err);
         }
         else {
-            res.json({status: 200, msg: rows})
+            res.json({status: 200, msg: 'got user data',data:rows})
         }
     });
 }
@@ -30,13 +52,13 @@ exports.show = function (req, res) {
 
 exports.login = function (req, res) {
     var userData = req.body;
-    User.findOne({'username': userData.username}, function (err, user) {
+    User.findOne({'username': userData.username,'is_deleted':false}, function (err, user) {
         console.log(user)
         if (err) {
             return res.json(err);
         }
         if (!user) {
-            return res.json({status: 404, msg: 'Invalid Username try aging !'});
+            return res.json({status: 404, msg: 'Invalid Username try again !'});
         }
         if (user) {
             var password = crypto.pbkdf2Sync(userData.password, user.salt, 1000, 64).toString('hex');
