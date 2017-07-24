@@ -32,6 +32,7 @@ app.get('/', function (req, res) {
 
 var userRoute = require('./routes/user.route')(app);
 var profileRoute = require('./routes/profile.route')(app);
+var productRoute=require('./routes/products.route')(app);
 
 
 app.listen(port, function (err) {
