@@ -58,11 +58,32 @@ exports.delete = function (req, res) {
     });
 }
 
-exports.getById = function (req, res) {
+exports.update = function (req, res) {
+    var product_id = req.params.product_id;
+    var product = req.body;
 
+    if (!req.headers['token']) {
+        return res.json({status: 500, msg: 'Invalid request'})
+    }
+    var token = req.headers['token'];
 
+    var user = new User();
+    user.verifyToken(token, function (valid) {
+        if (!valid) {
+            return res.json({status: 203, msg: 'invalid tokens'});
+        }
+        else {
+            Product.update({'_id': product_id}, {$set: product}, function (err, updatedproduct) {
+                if (err) {
+                    return res.json({status: 500, msg: 'error while updating the product !'});
+                }
+                else {
+                    res.json({status: 200, msg: 'Product updated successfully !'});
+                }
+            })
+        }
+    });
 }
-
 
 exports.getByUser = function (req, res) {
     if (!req.headers['token']) {
