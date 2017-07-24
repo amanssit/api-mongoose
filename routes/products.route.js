@@ -6,10 +6,12 @@ module.exports = function (app) {
     app.route('/product')
         .post(product.create)
 
+
     app.route('/product/list')
         .post(product.getByUser)
 
     app.route('/product/:product_id')
         .get(product.getById)
+        .delete(product.delete)
 
 }
