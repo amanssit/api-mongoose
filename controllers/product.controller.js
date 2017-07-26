@@ -96,9 +96,17 @@ exports.getByUser = function (req, res) {
             return res.json({status: 203, msg: 'invalid tokens'});
         }
         else {
-            Product.find({user_id: valid._id, is_deleted: false}, function (err, products) {
-                res.json({status: 200, msg: 'got product data ', data: products});
-            })
+            // Product.find({user_id: valid._id, is_deleted: false}, function (err, products) {
+            //     res.json({status: 200, msg: 'got product data ', data: products});
+            // })
+
+
+
+            //**************** used for the server side paging************////
+
+            Product.paginate({}, { offset: 5, limit:5 }, function(err, result) {
+                res.json({status: 200, msg: 'got product data ', data: result});
+            });
         }
     });
 
