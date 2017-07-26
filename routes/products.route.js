@@ -10,6 +10,9 @@ module.exports = function (app) {
     app.route('/product/list')
         .post(product.getByUser)
 
+    app.route('/product/upload')
+        .post(product.upload)
+
     app.route('/product/:product_id')
         .delete(product.delete)
         .put(product.update)

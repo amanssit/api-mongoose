@@ -1,6 +1,12 @@
 var mongoose = require('mongoose');
+
+var formidable = require('formidable');
+var fs = require('fs');
+var csvjson=require('csvjson');
+
 var Product = require('../models/product.model');
 var User = require('../models/user.model');
+
 
 exports.create = function (req, res) {
 
@@ -101,10 +107,10 @@ exports.getByUser = function (req, res) {
             // })
 
 
-
             //**************** used for the server side paging************////
+            /**********get this offset and limit from request ************************/
 
-            Product.paginate({}, { offset: 5, limit:5 }, function(err, result) {
+            Product.paginate({}, {offset: 5, limit: 5}, function (err, result) {
                 res.json({status: 200, msg: 'got product data ', data: result});
             });
         }
@@ -112,5 +118,30 @@ exports.getByUser = function (req, res) {
 
 }
 
+exports.upload = function (req, res,next) {
+
+    /***************this code will work for image as well as excel files*************/
+
+    var form = new formidable.IncomingForm();
+    form.keepExtensions = true; //keep file extension
+    form.uploadDir='./excel'
+    form.parse(req, function (err, fields, files) {
+        console.log('file path : ', files.file.path);
+
+        /*****fields contains the data field that send by post request*****/
+        /*from here proced excel work********/
 
 
+        var data = fs.readFileSync(files.file.path, { encoding : 'utf8'});
+
+        var options = {
+            delimiter : ',',// optional
+            quote     : '"' // optional
+        };
+
+        var jsondata=csvjson.toObject(data, options);
+
+
+        res.json({status: 200, msg: 'file upload', data:jsondata});
+})
+}
