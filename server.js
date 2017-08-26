@@ -4,10 +4,12 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var cookieParser = require('cookie-parser');
 var cors=require('cors');
+var passport = require('passport');
 var User = require('./models/user.model');
 var dbConfig = require('./config/db');
-
 var app = express();
+
+var social=require('./passport/passport')(app,passport);
 
 app.use(cors());
 

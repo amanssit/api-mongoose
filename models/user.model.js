@@ -33,7 +33,9 @@ UserSchema.pre('save', function (next) {
     var user = this;
     // generate a random salt for every user for security
     user.salt = crypto.randomBytes(16).toString('hex');
-    user.password = crypto.pbkdf2Sync(user.password, this.salt, 1000, 64).toString('hex');
+
+    console.log(user);
+    user.password = crypto.pbkdf2Sync(user.password, user.salt, 1000, 64,'sha512').toString('hex');
     next();
 })
 

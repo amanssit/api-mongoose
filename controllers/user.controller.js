@@ -60,7 +60,7 @@ exports.login = function (req, res) {
             return res.json({status: 404, msg: 'Invalid Username try again !'});
         }
         if (user) {
-            var password = crypto.pbkdf2Sync(userData.password, user.salt, 1000, 64).toString('hex');
+            var password = crypto.pbkdf2Sync(userData.password, user.salt, 1000, 64,'sha512').toString('hex');
 
             User.findOne({'username': userData.username, 'password': password}, function (err, userlogin) {
                 if (err) {
